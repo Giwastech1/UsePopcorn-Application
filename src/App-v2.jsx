@@ -53,7 +53,10 @@ const tempQuery = "warrior";
 function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]); 
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(function() {
+    const storedValue = localStorage.getItem("watched");
+    return storedValue? JSON.parse(storedValue):[];
+  })
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
@@ -67,8 +70,11 @@ function App() {
     setSelectedId(null);
   }
   function handleSelectId(id) {
-    setSelectedId(id!==selectedId? id : null);
+    setSelectedId(id !== selectedId ? id : null);
   }
+  useEffect(function () {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  },[watched])
   useEffect(function () {
     const controller = new AbortController();
     async function getMovies() {
@@ -95,9 +101,9 @@ function App() {
     if (query.length<3) {
       setMovies([]);
       setError("");
+      handleCloseMovie();
       return;
     }
-    handleCloseMovie();
     getMovies();
     return function () {
       controller.abort();
