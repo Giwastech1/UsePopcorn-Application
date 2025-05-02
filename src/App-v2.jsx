@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 const tempMovieData = [
   {
@@ -74,7 +74,7 @@ function App() {
   }
   useEffect(function () {
     localStorage.setItem("watched", JSON.stringify(watched));
-  },[watched])
+  }, [watched]);
   useEffect(function () {
     const controller = new AbortController();
     async function getMovies() {
@@ -113,7 +113,7 @@ function App() {
     <>
       <NavBar>
         <Logo />
-       <Search query={query} setQuery={setQuery} />
+        <Search query={query} setQuery={setQuery} />
         <NumOfResult movies={movies} />
       </NavBar>
       <Main>
@@ -153,16 +153,30 @@ function Logo() {
     </div>
   );
 }
-function Search({query,setQuery}) {
- 
+function Search({ query, setQuery }) {
+  const inputEl = useRef(null);
+  useEffect(function () {
+    function callBack(e) {
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+        console.log("closing the search");
+      }
+    }
+    document.addEventListener("keydown", callBack);
+    return function () {
+      document.removeEventListener("keydown", callBack);
+    }
+  },[])
   return <input
-  className="search"
-  type="text"
-  placeholder="Search movies..."
-  value={query}
+    className="search"
+    type="text"
+    placeholder="Search movies..."
+    value={query}
     onChange={(e) => setQuery(e.target.value)}
-/>
+    ref={inputEl}
+  />
 }
+
 function NumOfResult({movies}) {
   return <p className="num-results">
     Found <strong>{movies.length}</strong> results
@@ -267,7 +281,17 @@ function MovieDetails({ selectedId, onAddWatched, onCloseMovie,setSelectedId,wat
     }
     getMoviesDetails();
   }, [selectedId]);
-
+  useEffect(function () {
+    function callBack(e) {
+      if (e.code === "Escape") {
+        onCloseMovie();
+      }
+    }
+    document.addEventListener("keydown", callBack);
+    return function () {
+      document.removeEventListener("keydown", callBack);
+    }
+  },[title])
   useEffect(function () {
     if (!title) {
       return;
