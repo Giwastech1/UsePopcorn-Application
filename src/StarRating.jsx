@@ -14,7 +14,7 @@ function StarRating({ maxRating = 5, size = 40, color = "#fcc419", message = [],
     const [tempRating, setTempRating] = useState(0);
     const handleRating = (rating) => {
         setRating(rating);
-        onSetRating(rating);
+        onSetRating?.(rating);
       }
       
     const textStyle = {

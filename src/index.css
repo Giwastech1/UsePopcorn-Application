@@ -15,7 +15,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 html {
   font-size: 62.5%;
 }
@@ -54,7 +53,7 @@ body {
   max-width: 42rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
-  overflow: scroll;
+  /*overflow: scroll;*/
   position: relative;
 }
 
@@ -99,7 +98,6 @@ body {
   width: 40rem;
   transition: all 0.3s;
   color: var(--color-text);
-
   /* background-color: var(--color-background-900); */
   background-color: var(--color-primary-light);
 }
@@ -138,7 +136,7 @@ body {
 .list {
   list-style: none;
   padding: 0.8rem 0;
-  overflow: scroll;
+ /* overflow: scroll*/;
 }
 
 .list-watched {
@@ -153,7 +151,6 @@ body {
   column-gap: 2.4rem;
   font-size: 1.6rem;
   align-items: center;
-
   padding: 1.6rem 3.2rem;
   border-bottom: 1px solid var(--color-background-100);
 }
@@ -334,6 +331,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 
 /*
 SPACING SYSTEM (px)
