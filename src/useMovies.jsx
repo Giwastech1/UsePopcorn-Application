@@ -1,5 +1,59 @@
 import { useState, useEffect } from "react";
+
 function useMovies(query,key,callBack) {
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    callBack?.();
+    const controller = new AbortController();
+    async function fetchMovies() {
+      try {
+        setIsLoading(true);
+        setError("");
+
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${[key]}&s=${query}`, { signal: controller.signal });
+        const data = await res.json();
+
+        if (data.Response === "False") throw new Error(data.Error);
+        const fullDetails = await Promise.all(
+          data.Search.map(async (movie) => {
+            const res = await fetch(
+              `https://www.omdbapi.com/?apikey=${[key]}&i=${movie.imdbID}`
+            );
+            return await res.json();
+          })
+        );
+
+        setMovies(fullDetails);
+        setError("");
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (query.length < 3) {
+      setMovies([]);
+      setError("");
+      return;
+    }
+
+    fetchMovies();
+
+    return () => controller.abort();
+  }, [query]);
+
+  return { movies, isLoading, error };
+}
+
+
+//Old fetch logic before filter result.
+{/*function useMovies(query,key,callBack) {
   const [movies, setMovies] = useState([]); 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,5 +94,5 @@ function useMovies(query,key,callBack) {
   }, [query]);
   return { movies, isLoading, error };
 }
-
+*/}
 export default useMovies;
