@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 function useMovies(query,key,callBack) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +27,9 @@ function useMovies(query,key,callBack) {
 
         setMovies(fullDetails);
         setError("");
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          setError(err.message);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          setError(error.message);
         }
       } finally {
         setIsLoading(false);

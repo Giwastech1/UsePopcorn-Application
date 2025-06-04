@@ -335,6 +335,7 @@ body {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  padding-left: 30px;
 }
 select {
   padding: 0.5rem;
